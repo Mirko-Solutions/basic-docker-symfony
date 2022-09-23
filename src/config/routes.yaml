@@ -1,0 +1,3 @@
+default:
+    path: /
+    controller: App\UserInterface\API\Action\DefaultAction

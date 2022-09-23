@@ -1,0 +1,32 @@
+{
+  "name": "mirko/symfony-api",
+  "license": "MIT",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/Application"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "symfony/symfony": "6.1.*",
+    "symfony/runtime": "6.1.*",
+    "symfony/debug": "^4.4",
+    "monolog/monolog": "^3.2"
+  },
+  "config": {
+    "bin-dir": "bin",
+    "allow-plugins": {
+      "symfony/flex": true,
+      "symfony/runtime": true
+    }
+  },
+  "extra": {
+    "symfony-app-dir": "src",
+    "symfony-bin-dir": "bin",
+    "symfony-var-dir": "var",
+    "symfony-web-dir": "public",
+    "symfony-tests-dir": "tests",
+    "symfony-assets-install": "relative"
+  }
+}
