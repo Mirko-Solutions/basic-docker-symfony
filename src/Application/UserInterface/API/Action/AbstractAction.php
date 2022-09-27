@@ -2,6 +2,9 @@
 
 namespace App\UserInterface\API\Action;
 
+use App\Infrastructure\Response\ResponseInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Twig\Environment;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -39,9 +42,6 @@ abstract class AbstractAction implements ServiceSubscriberInterface
         return $previous;
     }
 
-    /**
-     * Gets a container parameter by its name.
-     */
     protected function getParameter(string $name): array|bool|string|int|float|\UnitEnum|null
     {
         if (!$this->container->has('parameter_bag')) {
@@ -66,4 +66,39 @@ abstract class AbstractAction implements ServiceSubscriberInterface
             'parameter_bag' => '?'.ContainerBagInterface::class,
         ];
     }
+
+    protected function responseCollection(ResponseInterface $response, mixed $data): JsonResponse
+    {
+        $mergeData = [];
+        foreach ($data as $datum) {
+            $mergeData[] = $this->renderData($response, $datum);
+        }
+
+        $responseData = [
+            "type" => 'Collection',
+            "data" => $mergeData,
+        ];
+
+        if($response->hasMeta()) {
+            $responseData['meta'] = $response->getMeta($data);
+        }
+
+        return new JsonResponse($responseData);
+    }
+
+    protected function response(ResponseInterface $response, mixed $data): JsonResponse
+    {
+        $responseData = $this->renderData($response, $data);
+
+        return new JsonResponse($responseData);
+    }
+
+    private function renderData(ResponseInterface $response, mixed $data): array
+    {
+        return [
+            "type" => $response->getType($data),
+            "data" => $response->render($data),
+        ];
+    }
+
 }
