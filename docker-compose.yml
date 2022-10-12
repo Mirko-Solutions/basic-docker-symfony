@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
-      PGDATA: ${DB_INTERNAL_DATA_PATH};/var/lib/postgresql/data
+      PGDATA: ${DB_INTERNAL_DATA_PATH}
     volumes:
       - ${DB_LOCAL_DATA_PATH}:${DB_INTERNAL_DATA_PATH}
   adminer:

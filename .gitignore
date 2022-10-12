@@ -2,7 +2,7 @@
 .idea
 
 # Infrastructure
-./docker/data
+docker/data/
 .env
 
 # Project

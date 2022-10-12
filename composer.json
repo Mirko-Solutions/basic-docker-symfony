@@ -14,7 +14,8 @@
     "symfony/debug": "^4.4",
     "monolog/monolog": "^3.2",
     "symfony/orm-pack": "^2.2",
-    "symfony/console": "^6.1"
+    "symfony/console": "^6.1",
+    "symfony/form": "^6.1"
   },
   "config": {
     "bin-dir": "bin",
@@ -30,5 +31,8 @@
     "symfony-web-dir": "public",
     "symfony-tests-dir": "tests",
     "symfony-assets-install": "relative"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.1"
   }
 }

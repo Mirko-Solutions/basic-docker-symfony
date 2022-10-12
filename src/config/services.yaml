@@ -13,3 +13,8 @@ services:
             - '../Application/DependencyInjection/'
             - '../Application/Entity/'
             - '../Application/Kernel.php'
+
+    App\UserInterface\API\Action\:
+        resource: '../Application/UserInterface/API/Action'
+        tags:
+            - 'controller.service_arguments'

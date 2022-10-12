@@ -2,18 +2,19 @@
 
 namespace App\UserInterface\API\Action;
 
-use App\Infrastructure\Response\ResponseInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\DateTime;
+use App\Infrastructure\Exception\BadRequestException;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormInterface;
 use Twig\Environment;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\Service\Attribute\Required;
+use App\Infrastructure\Response\ResponseInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
@@ -23,23 +24,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @author Mykhailo YATSYSHYN <mykhailo.yatsyshyn@mirko.in.ua>
  */
-abstract class AbstractAction implements ServiceSubscriberInterface
+abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAwareInterface
 {
-    /**
-     * @var \Psr\Container\ContainerInterface
-     */
-    protected $container;
+    protected ContainerInterface $container;
 
-    /**
-     * @required
-     */
-    #[Required]
-    public function setContainer(ContainerInterface $container): ?ContainerInterface
+    public function setContainer(ContainerInterface $container = null)
     {
-        $previous = $this->container;
         $this->container = $container;
-
-        return $previous;
     }
 
     protected function getParameter(string $name): array|bool|string|int|float|\UnitEnum|null
@@ -93,6 +84,26 @@ abstract class AbstractAction implements ServiceSubscriberInterface
         return new JsonResponse($responseData);
     }
 
+    protected function handleType(string $formType)
+    {
+        /** @var RequestStack $request */
+        $request = $this->container->get('request_stack');
+        $form = $this->createForm($formType);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            return $form->getData();
+        }
+
+        $errors = [];
+        foreach ($form->getErrors() as $error) {
+            dd($error);
+        }
+
+//        throw new BadRequestException();
+    }
+
     private function renderData(ResponseInterface $response, mixed $data): array
     {
         return [
@@ -100,5 +111,14 @@ abstract class AbstractAction implements ServiceSubscriberInterface
             "data" => $response->render($data),
         ];
     }
+
+    /**
+     * Creates and returns a Form instance from the type of the form.
+     */
+    protected function createForm(string $type, mixed $data = null, array $options = []): FormInterface
+    {
+        return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+
 
 }
