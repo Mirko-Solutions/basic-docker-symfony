@@ -2,7 +2,6 @@
 
 namespace App\UserInterface\API\Action;
 
-use App\Infrastructure\Exception\BadRequestException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -27,6 +26,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAwareInterface
 {
     protected ContainerInterface $container;
+    private FormFactoryInterface $formFactory;
+
+    public function __construct(FormFactoryInterface $formFactory) {
+
+        $this->formFactory = $formFactory;
+    }
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -117,8 +122,6 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
      */
     protected function createForm(string $type, mixed $data = null, array $options = []): FormInterface
     {
-        return $this->container->get('form.factory')->create($type, $data, $options);
+        return $this->formFactory->create($type, $data, $options);
     }
-
-
 }
