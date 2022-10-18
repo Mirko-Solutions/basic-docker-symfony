@@ -3,9 +3,9 @@
 namespace App\UserInterface\API\Type\User;
 
 use App\Infrastructure\API\Type\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 /**
  * @author Mykhailo YATSYSHYN <mykhailo.yatsyshyn@mirko.in.ua>

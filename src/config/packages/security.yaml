@@ -15,6 +15,8 @@ security:
             stateless: true
             provider: app_user_provider
         main:
+            custom_authenticators:
+                - App\Security\ApiKeyAuthenticator
     access_control:
         - { path: ^/, roles: PUBLIC_ACCESS }
 
