@@ -11,6 +11,6 @@ abstract class AbstractType extends AbstractTypeSymfony
 {
     public function getBlockPrefix()
     {
-        return null;
+        return '';
     }
 }
