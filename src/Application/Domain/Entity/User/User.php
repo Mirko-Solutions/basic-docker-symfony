@@ -29,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[Column(type: 'string', unique: true, nullable: false)]
-    private Email $email;
+    private string $email;
 
     #[Column(type: 'string', nullable: false)]
     private string $password;
@@ -54,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function email(): Email
     {
-        return $this->email;
+        return new Email($this->email);
     }
 
     public function getPassword(): string
