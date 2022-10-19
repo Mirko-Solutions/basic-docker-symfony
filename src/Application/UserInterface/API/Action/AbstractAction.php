@@ -2,6 +2,12 @@
 
 namespace App\UserInterface\API\Action;
 
+<<<<<<< HEAD
+=======
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormInterface;
+>>>>>>> ea24dc672bb2822c107ff11e7f9700b6afea96b0
 use Twig\Environment;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -27,6 +33,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAwareInterface
 {
     protected ContainerInterface $container;
+    private FormFactoryInterface $formFactory;
+
+    public function __construct(FormFactoryInterface $formFactory) {
+
+        $this->formFactory = $formFactory;
+    }
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -117,8 +129,6 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
      */
     protected function createForm(string $type, mixed $data = null, array $options = []): FormInterface
     {
-        return $this->container->get('form.factory')->create($type, $data, $options);
+        return $this->formFactory->create($type, $data, $options);
     }
-
-
 }
