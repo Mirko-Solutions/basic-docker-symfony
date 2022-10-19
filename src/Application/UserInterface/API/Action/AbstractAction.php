@@ -105,7 +105,7 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
             // dd($error->getMessage());
         }
 
-       throw new BadRequestException();
+    //    throw new BadRequestException();
     }
 
     private function renderData(ResponseInterface $response, mixed $data): array
