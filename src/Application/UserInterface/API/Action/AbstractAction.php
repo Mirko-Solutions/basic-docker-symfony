@@ -2,12 +2,6 @@
 
 namespace App\UserInterface\API\Action;
 
-<<<<<<< HEAD
-=======
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormInterface;
->>>>>>> f5f9884b0a5fa7f1245988a8d1d12973ce16298c
 use Twig\Environment;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
