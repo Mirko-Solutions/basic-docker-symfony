@@ -12,9 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private UserTokenRepository $userTokenRepository;
+    public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository)
     {
         parent::__construct($registry, User::class);
+        $this->userTokenRepository = $userTokenRepository;
     }
 
     public function findByEmail(Email $email): ?User
@@ -29,6 +31,11 @@ class UserRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByToken(string $token): ?User
+    {
+        return $this->userTokenRepository->findOneBy(['token' => $token])?->getUser();
     }
 
 }
