@@ -13,6 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserRepository extends ServiceEntityRepository
 {
     private UserTokenRepository $userTokenRepository;
+    
     public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository)
     {
         parent::__construct($registry, User::class);

@@ -2,14 +2,10 @@
 
 namespace App\Infrastructure\Service\User;
 
-use App\Domain\Entity\User\User;
-use App\Domain\Entity\User\UserToken;
 use App\Domain\ValueObject\Email;
-use App\Infrastructure\Exception\BadRequestException;
+use App\Infrastructure\Security\ApiKeyAuthenticator;
 use App\Infrastructure\Repository\User\UserRepository;
-use App\Security\ApiKeyAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
@@ -32,21 +28,20 @@ class AuthService
         $this->createTokenService = $createTokenService;
     }
 
-    public function auth(array $data)
+    public function createUserTokenHash(string $idendtifier, string $password)
     {
         $passport = new Passport(
-            new UserBadge($data['email'], 
+            new UserBadge($idendtifier, 
             function (string $userIdentifier)  {
-                $eml = new Email($userIdentifier);
-                return $this->userRepository->findByEmail($eml);
+                return $this->userRepository->findByEmail(new Email($userIdentifier));
             }),
-            new PasswordCredentials($data['password'])
+            new PasswordCredentials($password)
         );
 
         $token = $this->apiKeyAuthenticator->createToken($passport, 'api');
-        $hash = hash('sha256', $token);
-        $this->createTokenService->create($passport->getUser(), $hash, 'api');
-        return $hash; 
-        
+        $hash = password_hash($token, PASSWORD_ARGON2I);
+        $userToken = $this->createTokenService->create($passport->getUser(), $hash, 'api');
+
+        return $userToken->getToken();  
     }
 }

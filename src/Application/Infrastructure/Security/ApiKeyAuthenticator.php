@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Infrastructure\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,9 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 
 class ApiKeyAuthenticator extends AbstractAuthenticator
 {
+    const API_LOGIN_PATH = '/api/user/login';
     private UserRepository $userRepository;
+
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -25,10 +27,10 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         $pathInfo = $request->getPathInfo();
-        //TODO FIND BETTER WAY TO CHECK LOGIN ROUTE
-        if (str_starts_with($pathInfo, 'api/user/login')) {
+        if (str_starts_with($pathInfo, self::API_LOGIN_PATH)) {
             return false;
         }
+
         return str_starts_with($pathInfo, '/api/');
     }
 

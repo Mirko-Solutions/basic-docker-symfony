@@ -18,13 +18,12 @@ class CreateTokenService
 
     public function create(User $user, string $token, string $type) : UserToken
     {
-        //TODO CHECK IF TOKEN ALREADY EXIST IN DB
         $userToken = new UserToken();
         $userToken->setUser($user);
         $userToken->setToken($token);
         $userToken->setType($type);
-
         $this->userTokenRepository->add($userToken, true);
+
         return $userToken;
     }
 }

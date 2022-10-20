@@ -14,10 +14,10 @@ security:
             pattern: ^/api/
             stateless: true
             provider: app_user_provider
-            entry_point: App\Security\AuthenticationEntryPoint
-            access_denied_handler: App\Security\AccessDeniedHandler
+            entry_point: App\Infrastructure\Security\AuthenticationEntryPoint
+            access_denied_handler: App\Infrastructure\Security\AccessDeniedHandler
             custom_authenticators:
-                - App\Security\ApiKeyAuthenticator
+                - App\Infrastructure\Security\ApiKeyAuthenticator
         main:
 when@test:
     security:
