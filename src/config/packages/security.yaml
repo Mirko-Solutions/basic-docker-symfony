@@ -14,10 +14,11 @@ security:
             pattern: ^/api/
             stateless: true
             provider: app_user_provider
+            entry_point: App\Infrastructure\Security\AuthenticationEntryPoint
+            access_denied_handler: App\Infrastructure\Security\AccessDeniedHandler
+            custom_authenticators:
+                - App\Infrastructure\Security\ApiKeyAuthenticator
         main:
-    access_control:
-        - { path: ^/, roles: PUBLIC_ACCESS }
-
 when@test:
     security:
         password_hashers:

@@ -2,19 +2,20 @@
 
 namespace App\UserInterface\API\Action;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormInterface;
 use Twig\Environment;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use App\Infrastructure\Response\ResponseInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Infrastructure\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -27,10 +28,12 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
 {
     protected ContainerInterface $container;
     private FormFactoryInterface $formFactory;
+    private RequestStack $requestStack;
 
-    public function __construct(FormFactoryInterface $formFactory) {
+    public function __construct(FormFactoryInterface $formFactory, RequestStack $requestStack) {
 
         $this->formFactory = $formFactory;
+        $this->requestStack = $requestStack;
     }
 
     public function setContainer(ContainerInterface $container = null)
@@ -92,21 +95,15 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
     protected function handleType(string $formType)
     {
         /** @var RequestStack $request */
-        $request = $this->container->get('request_stack');
+        $request = $this->requestStack->getCurrentRequest();
         $form = $this->createForm($formType);
-
         $form->handleRequest($request);
-
         if($form->isSubmitted() && $form->isValid()) {
             return $form->getData();
         }
-
-        $errors = [];
-        foreach ($form->getErrors() as $error) {
-            dd($error);
-        }
-
-//        throw new BadRequestException();
+        $errors = (string) $form->getErrors(true, false);
+        
+        return throw new BadRequestException($errors);
     }
 
     private function renderData(ResponseInterface $response, mixed $data): array

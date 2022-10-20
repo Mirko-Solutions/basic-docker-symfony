@@ -13,11 +13,12 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use App\Infrastructure\Repository\User\UserRepository;
+use App\Infrastructure\Repository\User\UserTokenRepository;
 
 /**
  * @author Mykhailo YATSYSHYN <mykhailo.yatsyshyn@mirko.in.ua>
  */
-#[Entity(repositoryClass: UserRepository::class)]
+#[Entity(repositoryClass: UserTokenRepository::class)]
 #[Table(name: 'user_token')]
 class UserToken
 {
@@ -28,7 +29,7 @@ class UserToken
     private int $id;
 
     #[ManyToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
     #[Column(name: 'type', length: 255, nullable: false)]
@@ -65,6 +66,27 @@ class UserToken
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }
