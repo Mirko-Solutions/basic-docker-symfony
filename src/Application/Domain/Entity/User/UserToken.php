@@ -29,7 +29,7 @@ class UserToken
     private int $id;
 
     #[ManyToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
     #[Column(name: 'type', length: 255, nullable: false)]
@@ -82,7 +82,7 @@ class UserToken
         return $this;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
