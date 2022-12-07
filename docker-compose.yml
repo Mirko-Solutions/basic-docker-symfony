@@ -16,7 +16,7 @@ services:
       - public_net
   php-fpm:
     links:
-      - postgres
+      - database
     build:
       context: "./docker"
       dockerfile: "php/Dockerfile"
