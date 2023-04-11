@@ -11,11 +11,11 @@
     "php": ">=8.1",
     "symfony/symfony": "6.1.*",
     "symfony/runtime": "6.1.*",
-    "symfony/debug": "^4.4",
     "monolog/monolog": "^3.2",
     "symfony/orm-pack": "^2.2",
     "symfony/console": "^6.1",
-    "symfony/form": "^6.1"
+    "symfony/form": "^6.1",
+    "symfony/error-handler": "*"
   },
   "config": {
     "bin-dir": "bin",
