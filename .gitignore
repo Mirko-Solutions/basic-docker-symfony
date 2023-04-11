@@ -9,6 +9,6 @@ docker/data/
 # Project
 vendor
 src/var
-
+bin/*
 # Git
 *.orig
