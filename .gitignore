@@ -4,6 +4,7 @@
 # Infrastructure
 docker/data/
 .env
+.*.local
 
 # Project
 vendor
