@@ -10,5 +10,6 @@ docker/data/
 vendor
 src/var
 bin/*
+!bin/console
 # Git
 *.orig
