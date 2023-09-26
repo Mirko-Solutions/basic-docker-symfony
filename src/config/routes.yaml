@@ -21,3 +21,8 @@ api.user.reset-password:
     path: /api/user/reset-password/{token}
     controller: App\UserInterface\API\Action\User\ResetPasswordAction
     methods: ['POST']
+
+api.user.edit-profile:
+    path: /api/user/edit-profile/{user}
+    controller: App\UserInterface\API\Action\User\EditProfileAction
+    methods: ['POST']
