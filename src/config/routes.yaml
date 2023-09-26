@@ -6,3 +6,18 @@ api.user.login:
     path: /api/user/login
     controller: App\UserInterface\API\Action\User\LoginAction
     methods: ['POST']
+
+api.user.register:
+    path: /api/user/register
+    controller: App\UserInterface\API\Action\User\RegisterAction
+    methods: ['POST']
+
+api.user.recovery:
+    path: /api/user/recovery
+    controller: App\UserInterface\API\Action\User\RecoveryAction
+    methods: ['POST']
+
+api.user.reset-password:
+    path: /api/user/reset-password/{token}
+    controller: App\UserInterface\API\Action\User\ResetPasswordAction
+    methods: ['POST']

@@ -28,6 +28,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(name: 'id')]
     private int $id;
 
+    #[Column(type: 'string', nullable: false)]
+    private string $firstName;
+
+    #[Column(type: 'string', nullable: false)]
+    private string $lastName;
+
     #[Column(type: 'string', unique: true, nullable: false)]
     private string $email;
 
@@ -37,13 +43,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'simple_array', nullable: false)]
     private array $roles = [];
 
-    #[Pure] public static function create(Email $email): User
+    #[Column(type: 'string', nullable: true)]
+    private string|null $recoveryToken;
+
+    #[Column(type: 'datetime', nullable: false)]
+    private \DateTime $createdAt;
+
+    #[Column(type: 'datetime', nullable: false)]
+    private \DateTime $updatedAt;
+
+    #[Column(type: 'datetime', nullable: true)]
+    private \DateTime|null $deletedAt;
+
+    #[Pure] public static function create(Email $email, string $firstName, string $lastName): User
     {
         $user = new self();
 
         $user->email = $email;
+        $user->firstName = $firstName;
+        $user->lastName = $lastName;
         $user->roles[] = Role::USER->name;
-
+        $user->setCreatedAt();
+        $user->setUpdatedAt();
         return $user;
     }
 
@@ -72,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email()->toString();
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
@@ -90,6 +111,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setId(int $id): User
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): void
+    {
+        $this->createdAt = new \DateTime('now');
+    }
+
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): void
+    {
+        $this->updatedAt = new \DateTime('now');
+    }
+
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTime $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
+    }
+    public function setRecoveryToken(?string $recoveryToken): self
+    {
+        $this->recoveryToken = $recoveryToken;
+
         return $this;
     }
 }

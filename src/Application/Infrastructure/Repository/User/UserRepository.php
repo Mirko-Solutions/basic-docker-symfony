@@ -39,4 +39,8 @@ class UserRepository extends ServiceEntityRepository
         return $this->userTokenRepository->findOneBy(['token' => $token])?->getUser();
     }
 
+    public function findByRecoveryToken(string $token): ?User
+    {
+        return $this->findOneBy(['recoveryToken' => $token]);
+    }
 }

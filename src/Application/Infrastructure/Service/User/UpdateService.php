@@ -3,15 +3,13 @@
 namespace App\Infrastructure\Service\User;
 
 use App\Domain\Entity\User\User;
-use App\Domain\ValueObject\Email;
-use App\Infrastructure\Exception\BadRequestException;
 use App\Infrastructure\Repository\User\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * @author Mykhailo YATSYSHYN <mykhailo.yatsyshyn@mirko.in.ua>
+ * @author Bohdan Sinchuk <bohdan.sinchuk@mirko.in.ua>
  */
-class CreateService
+class UpdateService
 {
     private UserRepository $userRepository;
     private UserPasswordHasherInterface $hasher;
@@ -22,17 +20,18 @@ class CreateService
         $this->hasher = $hasher;
     }
 
-    public function create(Email $email, string $plainPassword, string $firstName, string $lastName) : User
+    public function update(User $user): User
     {
-        $userByEmail = $this->userRepository->findByEmail($email);
-        if($userByEmail) {
-            throw new BadRequestException("User with email {$email} already exist");
-        }
+        $this->userRepository->add($user, true);
 
-        $user = User::create($email, $firstName, $lastName);
+        return $user;
+    }
+
+    public function updatePassword(User $user, string $plainPassword): User
+    {
         $password = $this->hasher->hashPassword($user, $plainPassword);
+        $user->setRecoveryToken(null);
         $user->setPassword($password);
-
         $this->userRepository->add($user, true);
 
         return $user;

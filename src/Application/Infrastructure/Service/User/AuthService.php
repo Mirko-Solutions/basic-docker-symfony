@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Service\User;
 
 use App\Domain\ValueObject\Email;
+use App\Infrastructure\Exception\BadRequestException;
 use App\Infrastructure\Security\ApiKeyAuthenticator;
 use App\Infrastructure\Repository\User\UserRepository;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -37,7 +38,14 @@ class AuthService
             }),
             new PasswordCredentials($password)
         );
-
+        $passwordIsValid = null;
+        if ($passport->getUser() && null === $passport->getUser()->getDeletedAt()) {
+            $passwordIsValid = password_verify($password, $passport->getUser()->getPassword());
+        }
+        if (!$passwordIsValid) {
+            // Password is invalid
+            throw new BadRequestException('User not found');
+        }
         $token = $this->apiKeyAuthenticator->createToken($passport, 'api');
         $hash = password_hash($token, PASSWORD_ARGON2I);
         $userToken = $this->createTokenService->create($passport->getUser(), $hash, 'api');
