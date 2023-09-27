@@ -4,6 +4,6 @@ namespace App\Domain\Enum\User;
 
 enum Role
 {
-    case USER;
-    case ADMIN;
+    case ROLE_USER;
+    case ROLE_ADMIN;
 }

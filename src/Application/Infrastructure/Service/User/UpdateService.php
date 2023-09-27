@@ -2,10 +2,12 @@
 
 namespace App\Infrastructure\Service\User;
 
+use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Exception\BadRequestException;
 use App\Infrastructure\Repository\User\UserRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -30,21 +32,21 @@ class UpdateService
         return $user;
     }
 
-    public function updateProfile(User $user, array $data): User
+    public function updateProfile(User $user, UserDTO $userDTO, string $old_password): User
     {
-        if ( !password_verify($data['old_password'],$user->getPassword())) {
-            throw new BadRequestException('Something was wrong');
+        if ( !password_verify($old_password,$user->getPassword())) {
+            throw new NotFoundHttpException('Something was wrong');
         }
-        $password = $this->hasher->hashPassword($user, $data['password']);
+        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
 
-        $checkUser = $this->userRepository->findByEmailExlUserId(new Email($data['email']),$user->getId());
+        $checkUser = $this->userRepository->findByEmailExlUserId($userDTO->getEmail(),$user->getId());
 
         if ($checkUser){
             throw new BadRequestException('Email is already exists');
         }
-        $user->setEmail($data['email']);
-        $user->setFirstName($data['first_name']);
-        $user->setLastName($data['last_name']);
+        $user->setEmail($userDTO->getEmail());
+        $user->setFirstName($userDTO->getFirstName());
+        $user->setLastName($userDTO->getLastName());
         $user->setPassword($password);
         $user->setUpdatedAt();
         $this->userRepository->add($user, true);

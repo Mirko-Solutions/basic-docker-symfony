@@ -2,10 +2,12 @@
 
 namespace App\Infrastructure\Service\User;
 
+use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Exception\BadRequestException;
 use App\Infrastructure\Repository\User\UserRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -22,15 +24,15 @@ class CreateService
         $this->hasher = $hasher;
     }
 
-    public function create(Email $email, string $plainPassword, string $firstName, string $lastName) : User
+    public function create(UserDTO $userDTO) : User
     {
-        $userByEmail = $this->userRepository->findByEmail($email);
+        $userByEmail = $this->userRepository->findByEmail($userDTO->getEmail());
         if($userByEmail) {
-            throw new BadRequestException("User with email {$email} already exist");
+            throw new NotFoundHttpException("User with email {$userDTO->getEmail()} already exist");
         }
 
-        $user = User::create($email, $firstName, $lastName);
-        $password = $this->hasher->hashPassword($user, $plainPassword);
+        $user = User::create($userDTO);
+        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
         $user->setPassword($password);
 
         $this->userRepository->add($user, true);

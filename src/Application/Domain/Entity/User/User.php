@@ -2,6 +2,7 @@
 
 namespace App\Domain\Entity\User;
 
+use App\Domain\DTO\User\UserDTO;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use JetBrains\PhpStorm\Pure;
@@ -55,14 +56,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'datetime', nullable: true)]
     private \DateTime|null $deletedAt;
 
-    #[Pure] public static function create(Email $email, string $firstName, string $lastName): User
+    #[Pure] public static function create(UserDTO $userDTO): User
     {
         $user = new self();
 
-        $user->email = $email;
-        $user->firstName = $firstName;
-        $user->lastName = $lastName;
-        $user->roles[] = Role::USER->name;
+        $user->email = $userDTO->getEmail();
+        $user->firstName = $userDTO->getFirstName();
+        $user->lastName = $userDTO->getLastName();
+        $user->roles[] = Role::ROLE_USER->name;
         $user->setCreatedAt();
         $user->setUpdatedAt();
         return $user;
@@ -85,7 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        $roles[] = Role::ROLE_USER->name;
+
+        return array_unique($roles);
     }
 
     #[Pure] public function getUserIdentifier(): string

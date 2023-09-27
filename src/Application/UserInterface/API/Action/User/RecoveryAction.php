@@ -23,18 +23,13 @@ class RecoveryAction extends AbstractAction
     {
         $data = $this->handleType(RecoveryType::class);
         $user = $userService->findByEmail(new Email($data['email']));
-        $token = $this->generateRecoveryToken();
+        $token = 'rc_'.bin2hex(random_bytes(32));
         if ($user){
-            $user = $user->setRecoveryToken($this->generateRecoveryToken());
+            $user = $user->setRecoveryToken($token);
             $updateService->update($user);
         }
         return $this->response(new ArrayResponse(), [
             'recovery_token' => $token,
         ]);
-    }
-
-    private function generateRecoveryToken()
-    {
-        return 'rc_'.bin2hex(random_bytes(32));
     }
 }

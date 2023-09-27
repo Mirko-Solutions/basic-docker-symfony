@@ -2,6 +2,7 @@
 
 namespace App\UserInterface\Console\User;
 
+use App\Domain\DTO\User\UserDTO;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\CreateService;
 use Symfony\Component\Console\Command\Command;
@@ -38,7 +39,14 @@ class CreateCommand extends Command
         $email = new Email($input->getArgument('email'));
         $plainPassword = $input->getArgument('password');
 
-        $user = $this->createService->create($email, $plainPassword);
+        $user = $this->createService->create(
+            new UserDTO(
+                new Email($email),
+                $plainPassword,
+                'test_first_name',
+                'test_last_name'
+            )
+        );
 
         $io->success("User success register: email {$user->email()->toString()} id: {$user->getId()}");
 

@@ -21,4 +21,16 @@ class UserTokenRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function remove(string $userToken, bool $flush = false): void
+    {
+        $entity = $this->getEntityManager()->getRepository(UserToken::class)->findOneBy(['token'=>$userToken]);
+
+        if ($entity) {
+            $this->getEntityManager()->remove($entity);
+            if ($flush) {
+                $this->getEntityManager()->flush();
+            }
+        }
+    }
 }

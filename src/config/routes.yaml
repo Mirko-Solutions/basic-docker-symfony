@@ -26,3 +26,8 @@ api.user.edit-profile:
     path: /api/user/edit-profile/{user}
     controller: App\UserInterface\API\Action\User\EditProfileAction
     methods: ['POST']
+
+api.user.logout:
+    path: /api/user/logout
+    controller: App\UserInterface\API\Action\User\LogoutAction
+    methods: ['POST']
