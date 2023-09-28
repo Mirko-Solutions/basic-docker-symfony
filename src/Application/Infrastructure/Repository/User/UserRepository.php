@@ -53,8 +53,58 @@ class UserRepository extends ServiceEntityRepository
         return $this->userTokenRepository->findOneBy(['token' => $token])?->user();
     }
 
+    public function mapToRow(User $user): array
+    {
+        return [
+            'id' => $user->getId(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getFirstName(),
+            'email' => $user->getUserIdentifier(),
+            'password' => '',
+            'roles' => $user->getRoles()
+        ];
+    }
+
+    public static function mapUserFromRow(array $row): User
+    {
+        return new User(
+            (int)$row['id'],
+            $row['firstName'],
+            $row['lastName'],
+            $row['email'],
+            $row['password'],
+            $row['roles']
+        );
+    }
+    public function getAll(): array
+    {
+        return array_map(
+             function (User $user): array {
+                return $this->mapToRow($user);
+            },
+            $this->findAll()
+        );
+    }
+
+    public function findById(int $id): array
+    {
+        return $this->mapToRow($this->find($id));
+    }
+
     public function findByRecoveryToken(string $token): ?User
     {
         return $this->findOneBy(['recoveryToken' => $token]);
+    }
+
+    public function softDelete(int $id): void
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->update(User::class,'u')
+            ->set('u.deletedAt', ':deletedAt')
+            ->where("u.id = :user_id")
+            ->setParameter("deletedAt", (new \DateTime())->format('Y-m-d H:i:s'))
+            ->setParameter("user_id", $id)
+            ->getQuery()
+            ->execute();
     }
 }

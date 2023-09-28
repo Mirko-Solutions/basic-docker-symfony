@@ -27,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[SequenceGenerator(sequenceName: 'id', allocationSize: 1, initialValue: 1)]
     #[Column(name: 'id')]
-    private int $id;
+    private int|null $id;
 
     #[Column(type: 'string', nullable: false)]
     private string $firstName;
@@ -56,20 +56,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'datetime', nullable: true)]
     private \DateTime|null $deletedAt;
 
+    public function __construct(int|null $id, string $firstName, string $lastName, string $email, string $password, array $roles)
+    {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->email = $email;
+        $this->password = $password;
+        $this->roles = $roles;
+    }
+
+
     #[Pure] public static function create(UserDTO $userDTO): User
     {
-        $user = new self();
-
-        $user->email = $userDTO->getEmail();
-        $user->firstName = $userDTO->getFirstName();
-        $user->lastName = $userDTO->getLastName();
-        $user->roles[] = Role::ROLE_USER->name;
+        $user = new self(
+            null,
+            $userDTO->getFirstName(),
+            $userDTO->getLastName(),
+            $userDTO->getEmail(),
+            $userDTO->getPlainPassword(),
+            [Role::ROLE_USER->name]
+        );
         $user->setCreatedAt();
         $user->setUpdatedAt();
         return $user;
     }
 
-    public function getId(): int
+    public function getId(): int|null
     {
         return $this->id;
     }

@@ -36,7 +36,7 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
         $this->requestStack = $requestStack;
     }
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface|null $container = null): void
     {
         $this->container = $container;
     }
@@ -92,11 +92,11 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
         return new JsonResponse($responseData);
     }
 
-    protected function handleType(string $formType)
+    protected function handleType(string $formType, array $options = []): mixed
     {
         /** @var RequestStack $request */
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->createForm($formType);
+        $form = $this->createForm($formType, null, $options);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             return $form->getData();

@@ -22,7 +22,7 @@ class EditProfileAction extends AbstractAction
         if($security->getUser()?->getId() !== $user->getId()) {
             throw new AccessDeniedException();
         }
-        $data = $this->handleType(EditProfileType::class);
+        $data = $this->handleType(EditProfileType::class, ['method' => 'PUT']);
         $updateService->updateProfile(
             $user,
             new UserDTO(
