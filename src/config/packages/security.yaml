@@ -28,6 +28,8 @@ security:
 
         - { path: ^/api/user/edit-profile/\d+$, roles: ROLE_USER }
         - { path: ^/api/user/logout, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: ^/api/admin/*, roles: ROLE_ADMIN }
 when@test:
     security:
         password_hashers:
