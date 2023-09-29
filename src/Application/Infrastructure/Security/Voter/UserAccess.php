@@ -28,10 +28,6 @@ class UserAccess extends Voter
             return false;
         }
 
-        if ($subject->getDeletedAt()) {
-            return false;
-        }
-
         return true;
     }
 
@@ -40,6 +36,10 @@ class UserAccess extends Voter
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
+            return false;
+        }
+
+        if ($user->getDeletedAt()) {
             return false;
         }
 
