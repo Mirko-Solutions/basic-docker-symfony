@@ -10,6 +10,7 @@ use App\Infrastructure\Service\Admin\UserEditService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
 use App\UserInterface\Admin\Type\UserEditType;
 use App\UserInterface\API\Action\AbstractAction;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -17,8 +18,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserEditAction extends AbstractAction
 {
-    public function __invoke(User $user, UserEditService $userEditService)
+    public function __invoke(User $user, UserEditService $userEditService, Security $security)
     {
+        if(!$security->isGranted(UserAccessEnum::EDIT->name, $user)) {
+            throw new AccessDeniedException();
+        }
        $data = $this->handleType(UserEditType::class, ['method' => 'PUT']);
 
        return $this->response(new ArrayResponse(), $userEditService->edit(

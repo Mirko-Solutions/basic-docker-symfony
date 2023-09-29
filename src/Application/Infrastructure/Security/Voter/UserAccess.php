@@ -45,6 +45,7 @@ class UserAccess extends Voter
 
         return match ($attribute) {
             UserAccessEnum::READ->name   => $this->canRead($subject, $user),
+            UserAccessEnum::LIST->name   => $this->canList($subject, $user),
             UserAccessEnum::CREATE->name => $this->canCreate($subject, $user),
             UserAccessEnum::EDIT->name   => $this->canEdit($subject, $user),
             UserAccessEnum::DELETE->name => $this->canDelete($subject, $user),
@@ -55,6 +56,15 @@ class UserAccess extends Voter
     private function canRead(User $owner, UserInterface $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN', $user) || $user->getUserIdentifier() === $owner->getUserIdentifier())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private function canList(User $owner, UserInterface $user): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN', $user))
         {
             return true;
         }

@@ -8,6 +8,7 @@ enum UserAccessEnum
     case CREATE;
     case EDIT;
     case DELETE;
+    case LIST;
 
     public static function getAllValues(): array
     {
