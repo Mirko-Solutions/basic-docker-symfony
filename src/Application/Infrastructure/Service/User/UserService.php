@@ -24,6 +24,11 @@ class UserService
         return $this->userRepository->findByEmail($email);
     }
 
+    public function getById(int $id): array
+    {
+        return $this->userRepository->findById($id);
+    }
+
     public function findByRecoveryToken(string $token): User|null
     {
         return $this->userRepository->findByRecoveryToken($token);

@@ -27,6 +27,16 @@ api.user.edit-profile:
     controller: App\UserInterface\API\Action\User\EditProfileAction
     methods: ['PUT']
 
+api.user.view-profile:
+    path: /api/user/view-profile/{user}
+    controller: App\UserInterface\API\Action\User\ViewProfileAction
+    methods: ['GET']
+
+api.user.delete-profile:
+    path: /api/user/delete-profile/{user}
+    controller: App\UserInterface\API\Action\User\DeleteProfileAction
+    methods: ['DELETE']
+
 api.user.logout:
     path: /api/user/logout
     controller: App\UserInterface\API\Action\User\LogoutAction

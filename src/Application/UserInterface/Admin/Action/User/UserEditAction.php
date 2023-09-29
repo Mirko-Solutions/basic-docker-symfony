@@ -4,11 +4,13 @@ namespace App\UserInterface\Admin\Action\User;
 
 use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
+use App\Domain\Enum\User\UserAccessEnum;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\Admin\UserEditService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
 use App\UserInterface\Admin\Type\UserEditType;
 use App\UserInterface\API\Action\AbstractAction;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @author Bohdan Sinchuk <bohdan.sinchuk@mirko.in.ua>

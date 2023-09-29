@@ -4,6 +4,7 @@ namespace App\UserInterface\API\Action\User;
 
 use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
+use App\Domain\Enum\User\UserAccessEnum;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\UpdateService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
@@ -19,7 +20,7 @@ class EditProfileAction extends AbstractAction
 {
     public function __invoke(User $user, UpdateService $updateService, Security $security)
     {
-        if($security->getUser()?->getId() !== $user->getId()) {
+        if(!$security->isGranted(UserAccessEnum::EDIT->name, $user)) {
             throw new AccessDeniedException();
         }
         $data = $this->handleType(EditProfileType::class, ['method' => 'PUT']);
