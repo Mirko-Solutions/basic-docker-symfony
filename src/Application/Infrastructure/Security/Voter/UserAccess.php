@@ -18,19 +18,17 @@ class UserAccess extends Voter
         $this->security = $security;
     }
 
+    /**
+     * @param UserInterface $subject
+     */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, UserAccessEnum::getAllValues())) {
-            return false;
-        }
-
-        if (!$subject instanceof UserInterface) {
-            return false;
-        }
-
-        return true;
+        return (UserAccessEnum::tryFrom($attribute) !== null);
     }
 
+    /**
+     * @param UserInterface $subject
+     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -44,12 +42,12 @@ class UserAccess extends Voter
         }
 
         return match ($attribute) {
-            UserAccessEnum::READ->name   => $this->canRead($subject, $user),
-            UserAccessEnum::LIST->name   => $this->canList($subject, $user),
+            UserAccessEnum::READ->name => $this->canRead($subject, $user),
+            UserAccessEnum::LIST->name => $this->canList($subject, $user),
             UserAccessEnum::CREATE->name => $this->canCreate($subject, $user),
-            UserAccessEnum::EDIT->name   => $this->canEdit($subject, $user),
+            UserAccessEnum::EDIT->name => $this->canEdit($subject, $user),
             UserAccessEnum::DELETE->name => $this->canDelete($subject, $user),
-            default            => false
+            default => false
         };
     }
 

@@ -32,7 +32,7 @@ class CreateService
         }
 
         $user = User::create($userDTO);
-        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
+        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
         $user->setPassword($password);
 
         $this->userRepository->add($user, true);

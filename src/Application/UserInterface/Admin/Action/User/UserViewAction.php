@@ -6,6 +6,7 @@ use App\Domain\Entity\User\User;
 use App\Domain\Enum\User\UserAccessEnum;
 use App\Infrastructure\Service\Admin\UserViewService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\UserResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -15,11 +16,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserViewAction extends AbstractAction
 {
-    public function __invoke(User $user, UserViewService $userViewService, Security $security)
+    public function __invoke(User $user, Security $security)
     {
         if(!$security->isGranted(UserAccessEnum::READ->name, $user)) {
             throw new AccessDeniedException();
         }
-       return $this->response(new ArrayResponse(), $userViewService->getById($user->getId()));
+       return $this->response(new UserResponse(), $user);
     }
 }

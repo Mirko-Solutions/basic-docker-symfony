@@ -24,7 +24,7 @@ class CreateCommand extends Command
         $this->createService = $createService;
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->setDescription('Create new user in database');
 
@@ -32,20 +32,19 @@ class CreateCommand extends Command
         $this->addArgument("password", InputArgument::REQUIRED);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $email = new Email($input->getArgument('email'));
         $plainPassword = $input->getArgument('password');
-
+        $userDTO = new UserDTO();
+        $userDTO->email = $email;
+        $userDTO->password = $plainPassword;
+        $userDTO->first_name = 'test_first_name';
+        $userDTO->last_name = 'test_last_name';
         $user = $this->createService->create(
-            new UserDTO(
-                new Email($email),
-                $plainPassword,
-                'test_first_name',
-                'test_last_name'
-            )
+            $userDTO
         );
 
         $io->success("User success register: email {$user->email()->toString()} id: {$user->getId()}");

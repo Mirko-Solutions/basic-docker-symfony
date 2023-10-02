@@ -2,6 +2,7 @@
 
 namespace App\UserInterface\API\Action;
 
+use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -85,18 +86,18 @@ abstract class AbstractAction implements ServiceSubscriberInterface, ContainerAw
         return new JsonResponse($responseData);
     }
 
-    protected function response(ResponseInterface $response, mixed $data): JsonResponse
+    protected function response(ResponseInterface $response, mixed $data, int $status = Response::HTTP_OK): JsonResponse
     {
         $responseData = $this->renderData($response, $data);
 
-        return new JsonResponse($responseData);
+        return new JsonResponse($responseData, $status);
     }
 
-    protected function handleType(string $formType, array $options = []): mixed
+    protected function handleType(string $formType, mixed $data = null, array $options = []): mixed
     {
         /** @var RequestStack $request */
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->createForm($formType, null, $options);
+        $form = $this->createForm($formType, $data, $options);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             return $form->getData();

@@ -23,7 +23,7 @@ class UserCreateService
         $this->hasher = $hasher;
     }
 
-    public function create(UserDTO $userDTO) : array
+    public function create(UserDTO $userDTO) : User
     {
         $userByEmail = $this->userRepository->findByEmail($userDTO->getEmail());
         if($userByEmail) {
@@ -31,11 +31,11 @@ class UserCreateService
         }
 
         $user = User::create($userDTO);
-        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
+        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
         $user->setPassword($password);
 
         $this->userRepository->add($user, true);
 
-        return $this->userRepository->mapToRow($user);
+        return $user;
     }
 }

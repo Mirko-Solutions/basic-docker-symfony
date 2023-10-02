@@ -2,13 +2,13 @@
 
 namespace App\Domain\Enum\User;
 
-enum UserAccessEnum
+enum UserAccessEnum: string
 {
-    case READ;
-    case CREATE;
-    case EDIT;
-    case DELETE;
-    case LIST;
+    case READ = 'READ';
+    case CREATE = 'CREATE';
+    case EDIT = 'EDIT';
+    case DELETE = 'DELETE';
+    case LIST = 'LIST';
 
     public static function getAllValues(): array
     {

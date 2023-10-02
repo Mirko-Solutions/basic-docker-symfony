@@ -24,7 +24,7 @@ class UserEditService
         $this->hasher = $hasher;
     }
 
-    public function edit(User $user, UserDTO $userDTO) : array
+    public function edit(User $user, UserDTO $userDTO) : User
     {
         $checkUser = $this->userRepository->findByEmailExlUserId($userDTO->getEmail(),$user->getId());
 
@@ -32,7 +32,7 @@ class UserEditService
             throw new NotFoundHttpException("User with email {$userDTO->getEmail()} already exist");
         }
 
-        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
+        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
         $user->setEmail($userDTO->getEmail());
         $user->setFirstName($userDTO->getFirstName());
         $user->setLastName($userDTO->getLastName());
@@ -41,6 +41,6 @@ class UserEditService
 
         $this->userRepository->add($user, true);
 
-        return $this->userRepository->mapToRow($user);
+        return $user;
     }
 }

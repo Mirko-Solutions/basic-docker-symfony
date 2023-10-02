@@ -6,6 +6,7 @@ use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\UpdateService;
 use App\Infrastructure\Service\User\UserService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\TokenResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use App\UserInterface\API\Type\User\RecoveryType;
 use Symfony\Component\Mailer\MailerInterface;
@@ -28,8 +29,6 @@ class RecoveryAction extends AbstractAction
             $user = $user->setRecoveryToken($token);
             $updateService->update($user);
         }
-        return $this->response(new ArrayResponse(), [
-            'recovery_token' => $token,
-        ]);
+        return $this->response(new TokenResponse(), $token);
     }
 }

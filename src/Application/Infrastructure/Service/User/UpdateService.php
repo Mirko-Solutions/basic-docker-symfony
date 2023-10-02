@@ -32,18 +32,16 @@ class UpdateService
         return $user;
     }
 
-    public function updateProfile(User $user, UserDTO $userDTO, string $old_password): User
+    public function updateProfile(User $user, UserDTO $userDTO): User
     {
-        if ( !password_verify($old_password,$user->getPassword())) {
-            throw new NotFoundHttpException('Something was wrong');
-        }
-        $password = $this->hasher->hashPassword($user, $userDTO->getPlainPassword());
+        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
 
         $checkUser = $this->userRepository->findByEmailExlUserId($userDTO->getEmail(),$user->getId());
 
         if ($checkUser){
             throw new BadRequestException('Email is already exists');
         }
+
         $user->setEmail($userDTO->getEmail());
         $user->setFirstName($userDTO->getFirstName());
         $user->setLastName($userDTO->getLastName());

@@ -53,43 +53,6 @@ class UserRepository extends ServiceEntityRepository
         return $this->userTokenRepository->findOneBy(['token' => $token])?->user();
     }
 
-    public function mapToRow(User $user): array
-    {
-        return [
-            'id' => $user->getId(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getFirstName(),
-            'email' => $user->getUserIdentifier(),
-            'password' => '',
-            'roles' => $user->getRoles()
-        ];
-    }
-
-    public static function mapUserFromRow(array $row): User
-    {
-        return new User(
-            (int)$row['id'],
-            $row['firstName'],
-            $row['lastName'],
-            $row['email'],
-            $row['password'],
-            $row['roles']
-        );
-    }
-    public function getAll(): array
-    {
-        return array_map(
-             function (User $user): array {
-                return $this->mapToRow($user);
-            },
-            $this->findAll()
-        );
-    }
-
-    public function findById(int $id): array
-    {
-        return $this->mapToRow($this->find($id));
-    }
 
     public function findByRecoveryToken(string $token): ?User
     {

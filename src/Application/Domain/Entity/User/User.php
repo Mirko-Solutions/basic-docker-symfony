@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $userDTO->getFirstName(),
             $userDTO->getLastName(),
             $userDTO->getEmail(),
-            $userDTO->getPlainPassword(),
+            $userDTO->getPassword(),
             [Role::ROLE_USER->name]
         );
         $user->setCreatedAt();
@@ -99,10 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        $roles[] = Role::ROLE_USER->name;
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     #[Pure] public function getUserIdentifier(): string

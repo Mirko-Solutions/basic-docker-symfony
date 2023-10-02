@@ -5,9 +5,11 @@ namespace App\UserInterface\API\Action\User;
 use App\Domain\DTO\User\UserDTO;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\CreateService;
-use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\ErrorResponse;
+use App\UserInfrastructure\API\Response\SuccessResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use App\UserInterface\API\Type\User\RegisterType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @author Bohdan Sinchuk <bohdan.sinchuk@mirko.in.ua>
@@ -18,16 +20,13 @@ class RegisterAction extends AbstractAction
         CreateService $createService
     )
     {
-        $data = $this->handleType(RegisterType::class);
-        $user = $createService->create(
-            new UserDTO(
-                new Email($data['email']),
-                $data['password'],
-                $data['first_name'],
-                $data['last_name']
-            ));
-        return $this->response(new ArrayResponse(), [
-            'message' => 'User registration has been successful',
-        ]);
+        $data = $this->handleType(RegisterType::class,  new UserDTO());
+        try {
+            $createService->create($data);
+        } catch (NotFoundHttpException $e) {
+            return $this->response(new ErrorResponse(), $e->getMessage(), $e->getStatusCode());
+        }
+
+        return $this->response(new SuccessResponse(), 'User registration has been successful');
     }
 }

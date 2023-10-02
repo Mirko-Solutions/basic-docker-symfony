@@ -7,6 +7,7 @@ use App\Domain\Enum\User\UserAccessEnum;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\Admin\UserCreateService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\UserResponse;
 use App\UserInterface\Admin\Type\UserCreateType;
 use App\UserInterface\API\Action\AbstractAction;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,15 +23,9 @@ class UserCreateAction extends AbstractAction
         if(!$security->isGranted(UserAccessEnum::CREATE->name, $security->getUser())) {
             throw new AccessDeniedException();
         }
-       $data = $this->handleType(UserCreateType::class);
-       return $this->response(new ArrayResponse(),
-           $userCreateService->create(
-           new UserDTO(
-               new Email($data['email']),
-               $data['password'],
-               $data['first_name'],
-               $data['last_name']
-           ))
+       $data = $this->handleType(UserCreateType::class, new UserDTO());
+       return $this->response(new UserResponse(),
+           $userCreateService->create($data)
        );
     }
 }

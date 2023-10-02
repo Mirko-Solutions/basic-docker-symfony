@@ -24,13 +24,14 @@ class UserTokenRepository extends ServiceEntityRepository
 
     public function remove(string $userToken, bool $flush = false): void
     {
-        $entity = $this->getEntityManager()->getRepository(UserToken::class)->findOneBy(['token'=>$userToken]);
+        $userTokenRepository = $this->getEntityManager()->getRepository(UserToken::class);
+        $entity = $userTokenRepository->findOneBy(['token' => $userToken]);
 
         if ($entity) {
             $this->getEntityManager()->remove($entity);
-            if ($flush) {
-                $this->getEntityManager()->flush();
-            }
+        }
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
     }
 }

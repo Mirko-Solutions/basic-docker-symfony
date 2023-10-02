@@ -8,6 +8,7 @@ use App\Domain\Enum\User\UserAccessEnum;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\Admin\UserEditService;
 use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\UserResponse;
 use App\UserInterface\Admin\Type\UserEditType;
 use App\UserInterface\API\Action\AbstractAction;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,16 +24,8 @@ class UserEditAction extends AbstractAction
         if(!$security->isGranted(UserAccessEnum::EDIT->name, $user)) {
             throw new AccessDeniedException();
         }
-       $data = $this->handleType(UserEditType::class, ['method' => 'PUT']);
+       $data = $this->handleType(UserEditType::class, new UserDTO(),  ['method' => 'PUT']);
 
-       return $this->response(new ArrayResponse(), $userEditService->edit(
-           $user,
-           new UserDTO(
-               new Email($data['email']),
-               $data['password'],
-               $data['first_name'],
-               $data['last_name']
-            )
-       ));
+       return $this->response(new UserResponse(), $userEditService->edit($user, $data));
     }
 }

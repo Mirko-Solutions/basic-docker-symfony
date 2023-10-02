@@ -5,9 +5,8 @@ namespace App\UserInterface\API\Action\User;
 use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
 use App\Domain\Enum\User\UserAccessEnum;
-use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\UpdateService;
-use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\SuccessResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use App\UserInterface\API\Type\User\EditProfileType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,19 +22,8 @@ class EditProfileAction extends AbstractAction
         if(!$security->isGranted(UserAccessEnum::EDIT->name, $user)) {
             throw new AccessDeniedException();
         }
-        $data = $this->handleType(EditProfileType::class, ['method' => 'PUT']);
-        $updateService->updateProfile(
-            $user,
-            new UserDTO(
-                new Email($data['email']),
-                $data['password'],
-                $data['first_name'],
-                $data['last_name']
-            ),
-            $data['old_password']
-        );
-        return $this->response(new ArrayResponse(), [
-            'message' => 'User updated has been successful',
-        ]);
+        $data = $this->handleType(EditProfileType::class, new UserDTO(), ['method' => 'PUT']);
+        $updateService->updateProfile($user, $data);
+        return $this->response(new SuccessResponse(),'User updated has been successful');
     }
 }

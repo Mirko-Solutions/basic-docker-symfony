@@ -6,7 +6,7 @@ namespace App\UserInterface\API\Action\User;
 
 use App\Infrastructure\Service\User\UpdateService;
 use App\Infrastructure\Service\User\UserService;
-use App\UserInfrastructure\API\Response\ArrayResponse;
+use App\UserInfrastructure\API\Response\SuccessResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use App\UserInterface\API\Type\User\ResetPasswordType;
 
@@ -21,8 +21,6 @@ class ResetPasswordAction extends AbstractAction
         $user = $userService->findByRecoveryToken($token);
         $updateService->updatePassword($user, $data['password']);
 
-        return $this->response(new ArrayResponse(), [
-            'message' => 'Password has been changed successfully',
-        ]);
+        return $this->response(new SuccessResponse(), 'Password has been changed successfully');
     }
 }
