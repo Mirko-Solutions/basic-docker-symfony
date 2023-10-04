@@ -17,26 +17,27 @@ class CreateService
 {
     private UserRepository $userRepository;
     private UserPasswordHasherInterface $hasher;
+    private UserService $userService;
 
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $hasher)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $hasher, UserService $userService)
     {
         $this->userRepository = $userRepository;
         $this->hasher = $hasher;
+        $this->userService = $userService;
     }
 
     public function create(UserDTO $userDTO) : User
     {
-        $userByEmail = $this->userRepository->findByEmail($userDTO->getEmail());
-        if($userByEmail) {
-            throw new NotFoundHttpException("User with email {$userDTO->getEmail()} already exist");
+        try {
+            $this->userService->checkEmail($userDTO->getEmail());
+            $user = User::create($userDTO);
+            $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
+            $user->setPassword($password);
+            $this->userRepository->add($user, true);
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new BadRequestException("Error creating user: " . $e->getMessage());
         }
-
-        $user = User::create($userDTO);
-        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
-        $user->setPassword($password);
-
-        $this->userRepository->add($user, true);
-
-        return $user;
     }
 }

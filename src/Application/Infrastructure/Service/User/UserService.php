@@ -19,6 +19,15 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    public function checkEmail(Email $email): User|null
+    {
+        $userByEmail = $this->userRepository->findByEmail($email);
+        if ($userByEmail) {
+            throw new BadRequestException("User with email {$email} already exists");
+        }
+        return $userByEmail;
+    }
+
     public function findByEmail(Email $email): User|null
     {
         return $this->userRepository->findByEmail($email);

@@ -6,6 +6,7 @@ services:
         autoconfigure: true
 
         bind:
+            $dateFormat: 'Y-m-d H:i:s'
 
     App\:
         resource: '../Application'

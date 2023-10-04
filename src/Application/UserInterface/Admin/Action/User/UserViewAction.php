@@ -4,8 +4,6 @@ namespace App\UserInterface\Admin\Action\User;
 
 use App\Domain\Entity\User\User;
 use App\Domain\Enum\User\UserAccessEnum;
-use App\Infrastructure\Service\Admin\UserViewService;
-use App\UserInfrastructure\API\Response\ArrayResponse;
 use App\UserInfrastructure\API\Response\UserResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use Symfony\Bundle\SecurityBundle\Security;

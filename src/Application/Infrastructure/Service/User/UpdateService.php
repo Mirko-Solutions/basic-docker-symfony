@@ -34,22 +34,27 @@ class UpdateService
 
     public function updateProfile(User $user, UserDTO $userDTO): User
     {
-        $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
+        try {
+            $existingUser = $this->userRepository->findByEmailExlUserId($userDTO->getEmail(), $user->getId());
 
-        $checkUser = $this->userRepository->findByEmailExlUserId($userDTO->getEmail(),$user->getId());
+            if ($existingUser) {
+                throw new NotFoundHttpException("User with email {$userDTO->getEmail()} already exists");
+            }
 
-        if ($checkUser){
-            throw new BadRequestException('Email is already exists');
+            $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
+
+            $user->setEmail($userDTO->getEmail());
+            $user->setFirstName($userDTO->getFirstName());
+            $user->setLastName($userDTO->getLastName());
+            $user->setPassword($password);
+            $user->setUpdatedAt();
+
+            $this->userRepository->add($user, true);
+
+            return $user;
+        } catch (\Exception $e) {
+            throw new BadRequestException("Error editing user: " . $e->getMessage());
         }
-
-        $user->setEmail($userDTO->getEmail());
-        $user->setFirstName($userDTO->getFirstName());
-        $user->setLastName($userDTO->getLastName());
-        $user->setPassword($password);
-        $user->setUpdatedAt();
-        $this->userRepository->add($user, true);
-
-        return $user;
     }
 
     public function updatePassword(User $user, string $plainPassword): User

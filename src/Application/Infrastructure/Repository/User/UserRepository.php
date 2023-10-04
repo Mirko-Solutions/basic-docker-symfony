@@ -14,29 +14,37 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserRepository extends ServiceEntityRepository
 {
     private UserTokenRepository $userTokenRepository;
+    private string $dateFormat;
     
-    public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository)
+    public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository, string $dateFormat)
     {
         parent::__construct($registry, User::class);
         $this->userTokenRepository = $userTokenRepository;
+        $this->dateFormat = $dateFormat;
     }
 
-    public function findByEmail(Email $email): ?User
+    public function findByEmail(Email $email): User|null
     {
-        return $this->findOneBy(['email' => $email]);
+        return $this->findOneBy(['email' => $email->toString()]);
     }
 
-    public function findByEmailExlUserId(Email $email, int $userId): ?User
+    public function findByEmailExlUserId(Email $email, int $userId): User|null
     {
         $qb = $this->createQueryBuilder('u');
 
-        return $qb
+        $user = $qb
             ->andWhere($qb->expr()->neq('u.id', ':excluded_id'))
             ->andWhere($qb->expr()->eq('u.email', ':email'))
             ->setParameter('excluded_id', $userId)
-            ->setParameter('email', $email)
+            ->setParameter('email', $email->toString())
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($user === null) {
+            throw new \Exception("User not found for email {$email} and user ID {$userId}");
+        }
+
+        return $user;
     }
 
     public function add(User $user, bool $flush = false): void
@@ -48,15 +56,15 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByToken(string $token): ?User
+    public function findByToken(string $token): User|null
     {
         return $this->userTokenRepository->findOneBy(['token' => $token])?->user();
     }
 
 
-    public function findByRecoveryToken(string $token): ?User
+    public function findByRecoveryToken(string $recoveryToken): User|null
     {
-        return $this->findOneBy(['recoveryToken' => $token]);
+        return $this->findOneBy(['recoveryToken' => $recoveryToken]);
     }
 
     public function softDelete(int $id): void
@@ -65,7 +73,7 @@ class UserRepository extends ServiceEntityRepository
         $qb->update(User::class,'u')
             ->set('u.deletedAt', ':deletedAt')
             ->where("u.id = :user_id")
-            ->setParameter("deletedAt", (new \DateTime())->format('Y-m-d H:i:s'))
+            ->setParameter("deletedAt", (new \DateTime())->format($this->dateFormat))
             ->setParameter("user_id", $id)
             ->getQuery()
             ->execute();
