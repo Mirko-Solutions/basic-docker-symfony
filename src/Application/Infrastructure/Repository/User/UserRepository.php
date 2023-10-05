@@ -40,10 +40,6 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        if ($user === null) {
-            throw new \Exception("User not found for email {$email} and user ID {$userId}");
-        }
-
         return $user;
     }
 

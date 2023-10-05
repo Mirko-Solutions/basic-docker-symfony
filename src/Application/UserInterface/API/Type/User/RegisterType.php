@@ -17,28 +17,9 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class RegisterType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('first_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
-
-        $builder->add('last_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
-
-        $builder->add('email', EmailType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
+        $this->getUserFields($builder);
 
         $builder->add('password', RepeatedType::class, [
             'type' => PasswordType::class,
@@ -51,7 +32,8 @@ class RegisterType extends AbstractType
         ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefaults([
             'data_class' => UserDTO::class,
         ]);

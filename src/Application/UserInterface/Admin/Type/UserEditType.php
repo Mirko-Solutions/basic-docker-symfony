@@ -16,37 +16,16 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class UserEditType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('first_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
-
-        $builder->add('last_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
-
-        $builder->add('email', EmailType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
-        ]);
+        $this->getUserFields($builder);
 
         $builder->add('password', PasswordType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotNull()
-            ]
+            'required' => false,
         ]);
     }
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefaults([
             'data_class' => UserDTO::class,
         ]);
