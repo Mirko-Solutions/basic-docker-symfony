@@ -21,6 +21,9 @@ class RegisterAction extends AbstractAction
     )
     {
         $data = $this->handleType(RegisterType::class,  new UserDTO());
+        if (!$data->isAccepted()) {
+            return $this->response(new ErrorResponse(),'User not accepted privacy policy' ,400);
+        }
         try {
             $createService->create($data);
         } catch (NotFoundHttpException $e) {

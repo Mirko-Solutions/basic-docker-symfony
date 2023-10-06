@@ -14,6 +14,7 @@ class UserDTO
     public string $first_name;
     public string $last_name;
     public string|null $recoveryToken;
+    public bool $is_accepted = true;
 
     public function getEmail(): Email
     {
@@ -38,5 +39,10 @@ class UserDTO
     public function getRecoveryToken(): ?string
     {
         return $this->recoveryToken;
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->is_accepted;
     }
 }

@@ -32,6 +32,11 @@ api.user.view-profile:
     controller: App\UserInterface\API\Action\User\ViewProfileAction
     methods: ['GET']
 
+api.user.user-data:
+    path: /api/user/user-data
+    controller: App\UserInterface\API\Action\User\UserDataAction
+    methods: ['GET']
+
 api.user.delete-profile:
     path: /api/user/delete-profile/{user}
     controller: App\UserInterface\API\Action\User\DeleteProfileAction

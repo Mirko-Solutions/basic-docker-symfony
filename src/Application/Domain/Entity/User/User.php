@@ -56,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'datetime', nullable: true)]
     private \DateTime|null $deletedAt;
 
+    #[Column(type: 'boolean', nullable: false)]
+    private bool $isAccepted;
+
     public function __construct(int|null $id, string $firstName, string $lastName, string $email, string $password, array $roles)
     {
         $this->id = $id;
@@ -186,5 +189,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->isAccepted;
+    }
+
+    public function setIsAccepted(bool $isAccepted): void
+    {
+        $this->isAccepted = $isAccepted;
     }
 }
