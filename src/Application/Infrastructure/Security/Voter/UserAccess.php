@@ -54,26 +54,26 @@ class UserAccess extends Voter
 
     private function canRead(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN->name, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 
     private function canList(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted(Role::ROLE_ADMIN, $user));
+        return ($this->security->isGranted(Role::ROLE_ADMIN->name, $user));
     }
 
     private function canCreate(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted(Role::ROLE_ADMIN, $user));
+        return ($this->security->isGranted(Role::ROLE_ADMIN->name, $user));
     }
 
     private function canEdit(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN->name, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 
     private function canDelete(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN->name, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 }

@@ -30,7 +30,10 @@ class CreateService
     {
         try {
             $this->userService->checkEmail($userDTO->getEmail());
-            $user = User::create($userDTO);
+            $user = User::create($userDTO->getFirstName(),
+                $userDTO->getLastName(),
+                $userDTO->getEmail(),
+                $userDTO->getPassword());
             $password = $this->hasher->hashPassword($user, $userDTO->getPassword());
             $user->setPassword($password);
             $user->setIsAccepted($userDTO->isAccepted());

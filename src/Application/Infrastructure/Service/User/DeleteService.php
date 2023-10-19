@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Service\User;
 
+use App\Domain\Entity\User\User;
+use App\Domain\ValueObject\Email;
 use App\Infrastructure\Repository\User\UserRepository;
 
 /**
@@ -16,8 +18,8 @@ class DeleteService
         $this->userRepository = $userRepository;
     }
 
-    public function deleteById(int $id): void
+    public function softDelete(User $user): void
     {
-        $this->userRepository->softDelete($id);
+        $this->userRepository->softDelete($user);
     }
 }

@@ -63,15 +63,10 @@ class UserRepository extends ServiceEntityRepository
         return $this->findOneBy(['recoveryToken' => $recoveryToken]);
     }
 
-    public function softDelete(int $id): void
+    public function softDelete(User $user): void
     {
-        $qb = $this->createQueryBuilder('u');
-        $qb->update(User::class,'u')
-            ->set('u.deletedAt', ':deletedAt')
-            ->where("u.id = :user_id")
-            ->setParameter("deletedAt", (new \DateTime())->format($this->dateFormat))
-            ->setParameter("user_id", $id)
-            ->getQuery()
-            ->execute();
+        $user->setDeletedAt(new \DateTime());
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

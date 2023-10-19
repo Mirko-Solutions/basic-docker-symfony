@@ -18,7 +18,7 @@ class DeleteProfileAction extends AbstractAction
             throw new AccessDeniedException();
         }
 
-        $deleteService->deleteById($user->getId());
+        $deleteService->softDelete($user);
         return $this->response(new ArrayResponse(), [
             'message' => 'User has been deleted'
         ]);

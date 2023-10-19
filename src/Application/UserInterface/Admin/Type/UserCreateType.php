@@ -21,7 +21,7 @@ class UserCreateType extends AbstractType
     {
         $this->getUserFields($builder);
 
-        $builder->add('password', TextType::classs, [
+        $builder->add('password', TextType::class, [
             'required' => true,
             'constraints' => [
                 new NotNull()

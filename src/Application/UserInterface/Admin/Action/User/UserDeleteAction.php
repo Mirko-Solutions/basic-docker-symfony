@@ -20,7 +20,7 @@ class UserDeleteAction extends AbstractAction
         if(!$security->isGranted(UserAccessEnum::DELETE->name, $user)) {
             throw new AccessDeniedException();
         }
-        $userDeleteService->deleteById($user->getId());
+        $userDeleteService->softDelete($user);
        return $this->response(new ArrayResponse(), [
            'message' => 'User has been deleted'
        ]);
