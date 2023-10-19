@@ -19,7 +19,7 @@ class RegisterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->getUserFields($builder);
-        $builder->add('is_accepted',CheckboxType::class, [
+        $builder->add('isAccepted',CheckboxType::class, [
             'required' => true,
             'false_values' => [null,'', '0', 'false'],
             'constraints' => [

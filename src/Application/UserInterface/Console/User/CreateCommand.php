@@ -41,8 +41,8 @@ class CreateCommand extends Command
         $userDTO = new UserDTO();
         $userDTO->email = $email;
         $userDTO->password = $plainPassword;
-        $userDTO->first_name = 'test_first_name';
-        $userDTO->last_name = 'test_last_name';
+        $userDTO->firstName = 'test_first_name';
+        $userDTO->lastName = 'test_last_name';
         $user = $this->createService->create(
             $userDTO
         );

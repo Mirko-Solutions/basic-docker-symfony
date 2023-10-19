@@ -25,7 +25,7 @@ class UserRepository extends ServiceEntityRepository
 
     public function findByEmail(Email $email): User|null
     {
-        return $this->findOneBy(['email' => $email->toString()]);
+        return $this->findOneBy(['email' => $email]);
     }
 
     public function findByEmailExlUserId(Email $email, int $userId): User|null
@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->neq('u.id', ':excluded_id'))
             ->andWhere($qb->expr()->eq('u.email', ':email'))
             ->setParameter('excluded_id', $userId)
-            ->setParameter('email', $email->toString())
+            ->setParameter('email', $email)
             ->getQuery()
             ->getOneOrNullResult();
 

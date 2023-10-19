@@ -11,10 +11,10 @@ class UserDTO
 {
     public string $email;
     public string $password;
-    public string $first_name;
-    public string $last_name;
+    public string $firstName;
+    public string $lastName;
     public string|null $recoveryToken;
-    public bool $is_accepted = true;
+    public bool $isAccepted = true;
 
     public function getEmail(): Email
     {
@@ -28,12 +28,12 @@ class UserDTO
 
     public function getFirstName(): string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
     public function getLastName(): string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
     public function getRecoveryToken(): ?string
@@ -43,6 +43,6 @@ class UserDTO
 
     public function isAccepted(): bool
     {
-        return $this->is_accepted;
+        return $this->isAccepted;
     }
 }

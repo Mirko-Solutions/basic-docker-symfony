@@ -20,14 +20,14 @@ abstract class AbstractType extends AbstractTypeSymfony
 
     public function getUserFields(FormBuilderInterface $builder): FormBuilderInterface
     {
-        $builder->add('first_name', TextType::class, [
+        $builder->add('firstName', TextType::class, [
             'required' => true,
             'constraints' => [
                 new NotNull()
             ]
         ]);
 
-        $builder->add('last_name', TextType::class, [
+        $builder->add('lastName', TextType::class, [
             'required' => true,
             'constraints' => [
                 new NotNull()

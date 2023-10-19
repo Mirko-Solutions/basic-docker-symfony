@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Security\Voter;
 
 use App\Domain\Entity\User\User;
+use App\Domain\Enum\User\Role;
 use App\Domain\Enum\User\UserAccessEnum;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -53,26 +54,26 @@ class UserAccess extends Voter
 
     private function canRead(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted('ROLE_ADMIN', $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 
     private function canList(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted('ROLE_ADMIN', $user));
+        return ($this->security->isGranted(Role::ROLE_ADMIN, $user));
     }
 
     private function canCreate(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted('ROLE_ADMIN', $user));
+        return ($this->security->isGranted(Role::ROLE_ADMIN, $user));
     }
 
     private function canEdit(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted('ROLE_ADMIN', $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 
     private function canDelete(User $owner, UserInterface $user): bool
     {
-        return ($this->security->isGranted('ROLE_ADMIN', $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
+        return ($this->security->isGranted(Role::ROLE_ADMIN, $user) || $user->getUserIdentifier() === $owner->getUserIdentifier());
     }
 }

@@ -27,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[SequenceGenerator(sequenceName: 'id', allocationSize: 1, initialValue: 1)]
     #[Column(name: 'id')]
-    private int|null $id;
+    private int $id;
 
     #[Column(type: 'string', nullable: false)]
     private string $firstName;
@@ -59,21 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'boolean', nullable: false)]
     private bool $isAccepted;
 
-    public function __construct(int|null $id, string $firstName, string $lastName, string $email, string $password, array $roles)
-    {
-        $this->id = $id;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->email = $email;
-        $this->password = $password;
-        $this->roles = $roles;
-    }
-
-
     #[Pure] public static function create(UserDTO $userDTO): User
     {
         $user = new self(
-            null,
             $userDTO->getFirstName(),
             $userDTO->getLastName(),
             $userDTO->getEmail(),
@@ -85,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $user;
     }
 
-    public function getId(): int|null
+    public function getId(): int
     {
         return $this->id;
     }
@@ -186,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(Email $email): void
     {
         $this->email = $email;
     }
