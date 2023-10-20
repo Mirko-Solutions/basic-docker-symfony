@@ -5,9 +5,6 @@ services:
         autowire: true
         autoconfigure: true
 
-        bind:
-            $dateFormat: 'Y-m-d H:i:s'
-
     App\:
         resource: '../Application'
         exclude:
@@ -25,6 +22,3 @@ services:
         tags:
             - 'controller.service_arguments'
 
-    App\Infrastructure\Response\Response:
-        arguments:
-            $dateFormat: 'Y-m-d H:i:s'

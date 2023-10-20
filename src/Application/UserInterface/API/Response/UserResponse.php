@@ -3,6 +3,7 @@
 namespace App\UserInfrastructure\API\Response;
 
 use App\Domain\Entity\User\User;
+use App\Infrastructure\Response\DateFormatInterface;
 use App\Infrastructure\Response\Response;
 
 class UserResponse extends Response
@@ -23,9 +24,8 @@ class UserResponse extends Response
             'first_name' => $object->getFirstName(),
             'last_name' => $object->getLastName(),
             'roles' => $object->getRoles(),
-            'created_at' => $object->getCreatedAt()->format($this->dateFormat),
-            'deleted_at' => $object->getDeletedAt()?->format($this->dateFormat)
-
+            'created_at' => $object->getCreatedAt()->format(DateFormatInterface::DATEFORMAT),
+            'deleted_at' => $object->getDeletedAt()?->format(DateFormatInterface::DATEFORMAT)
         ];
     }
 }
