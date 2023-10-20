@@ -23,8 +23,8 @@ class UserResponse extends Response
             'first_name' => $object->getFirstName(),
             'last_name' => $object->getLastName(),
             'roles' => $object->getRoles(),
-            'created_at' => $object->getCreatedAt()->format('Y-m-d H:i:s'),
-            'deleted_at' => $object->getDeletedAt()?->format('Y-m-d H:i:s')
+            'created_at' => $object->getCreatedAt()->format($this->dateFormat),
+            'deleted_at' => $object->getDeletedAt()?->format($this->dateFormat)
 
         ];
     }

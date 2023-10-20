@@ -14,13 +14,11 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserRepository extends ServiceEntityRepository
 {
     private UserTokenRepository $userTokenRepository;
-    private string $dateFormat;
     
-    public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository, string $dateFormat)
+    public function __construct(ManagerRegistry $registry, UserTokenRepository $userTokenRepository)
     {
         parent::__construct($registry, User::class);
         $this->userTokenRepository = $userTokenRepository;
-        $this->dateFormat = $dateFormat;
     }
 
     public function findByEmail(Email $email): User|null
@@ -65,7 +63,7 @@ class UserRepository extends ServiceEntityRepository
 
     public function softDelete(User $user): void
     {
-        $user->setDeletedAt(new \DateTime());
+        $user->setDeletedAt();
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }

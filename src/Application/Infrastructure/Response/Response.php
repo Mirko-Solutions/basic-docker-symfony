@@ -10,9 +10,11 @@ use App\Infrastructure\Exception\ResponseException;
 abstract class Response implements ResponseInterface
 {
     protected bool $renderMeta = false;
+    protected string $dateFormat;
 
-    public function __construct(bool $renderMeta = false)
+    public function __construct(string $dateFormat = 'Y-m-d H:i:s', bool $renderMeta = false)
     {
+        $this->dateFormat = $dateFormat;
         $this->renderMeta = $renderMeta;
     }
 

@@ -24,3 +24,7 @@ services:
         resource: '../Application/UserInterface/Admin/Action'
         tags:
             - 'controller.service_arguments'
+
+    App\Infrastructure\Response\Response:
+        arguments:
+            $dateFormat: 'Y-m-d H:i:s'
