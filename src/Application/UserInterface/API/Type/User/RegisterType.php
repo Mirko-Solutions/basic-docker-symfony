@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
@@ -21,9 +23,9 @@ class RegisterType extends AbstractType
         $this->getUserFields($builder);
         $builder->add('isAccepted',CheckboxType::class, [
             'required' => true,
-            'false_values' => [null,'', '0', 'false'],
             'constraints' => [
-                new NotNull()
+                new NotNull(),
+                new NotBlank()
             ]
         ]);
         $builder->add('password', RepeatedType::class, [
@@ -32,7 +34,8 @@ class RegisterType extends AbstractType
             'first_options'  => ['label' => 'Password'],
             'second_options' => ['label' => 'Repeat Password'],
             'constraints' => [
-                new NotNull()
+                new NotNull(),
+                new NotBlank()
             ]
         ]);
     }

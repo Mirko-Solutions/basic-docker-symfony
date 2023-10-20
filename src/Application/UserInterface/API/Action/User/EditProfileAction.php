@@ -6,7 +6,7 @@ use App\Domain\DTO\User\UserDTO;
 use App\Domain\Entity\User\User;
 use App\Domain\Enum\User\UserAccessEnum;
 use App\Infrastructure\Service\User\UpdateService;
-use App\UserInfrastructure\API\Response\SuccessResponse;
+use App\UserInfrastructure\API\Response\UserResponse;
 use App\UserInterface\API\Action\AbstractAction;
 use App\UserInterface\API\Type\User\EditProfileType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,7 +23,6 @@ class EditProfileAction extends AbstractAction
             throw new AccessDeniedException();
         }
         $data = $this->handleType(EditProfileType::class, new UserDTO(), ['method' => 'PUT']);
-        $updateService->updateProfile($user, $data);
-        return $this->response(new SuccessResponse(),'User updated has been successful');
+        return $this->response(new UserResponse(), $updateService->updateProfile($user, $data));
     }
 }
