@@ -2,7 +2,7 @@
 
 namespace App\Domain\Entity\User;
 
-use App\Domain\Enum\User\TokenType;
+use App\Domain\Enum\User\GdprTypeEnum;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
@@ -31,17 +31,17 @@ class UserGdprPolicy
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
-    #[Column(name: 'type', length: 255, nullable: false)]
-    private string $type;
+    #[Column(name: 'type', length: 255, nullable: false, enumType: GdprTypeEnum::class)]
+    private GdprTypeEnum $type;
 
     #[Column(type: 'datetime')]
-    private \DateTime|null $acceptedAt = null;
+    private \DateTimeInterface|null $acceptedAt = null;
 
-    #[Pure] public static function create(User $user, TokenType $type, \DateTime|null $acceptedAt): self
+    #[Pure] public static function create(User $user, GdprTypeEnum $type, \DateTimeInterface|null $acceptedAt): self
     {
         $tokenEntity = new self();
         $tokenEntity->user = $user;
-        $tokenEntity->type = $type->name;
+        $tokenEntity->type = $type;
         $tokenEntity->acceptedAt = $acceptedAt;
 
         return $tokenEntity;
@@ -57,24 +57,24 @@ class UserGdprPolicy
         return $this->user;
     }
 
-    public function getType(): TokenType
+    public function getType(): GdprTypeEnum
     {
-        return TokenType::from($this->type);
+        return $this->type;
     }
 
-    public function getAcceptedAt(): \DateTime|null
+    public function getAcceptedAt(): \DateTimeInterface|null
     {
         return $this->acceptedAt;
     }
 
-    public function setType(string $type): self
+    public function setType(GdprTypeEnum $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function setAcceptedAt(\DateTime|null $acceptedAt): self
+    public function setAcceptedAt(\DateTimeInterface|null $acceptedAt): self
     {
         $this->acceptedAt = $acceptedAt;
 

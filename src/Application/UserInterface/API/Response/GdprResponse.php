@@ -20,7 +20,7 @@ class GdprResponse extends Response
      */
     public function render(mixed $object): array
     {
-        return [
+        return $object ?? [
             'id' => $object->getId(),
             'type' => $object->getType(),
             'accepted_at' => $object->getCreatedAt()->format(DateFormatInterface::DATEFORMAT),
