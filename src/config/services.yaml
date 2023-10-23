@@ -5,8 +5,6 @@ services:
         autowire: true
         autoconfigure: true
 
-        bind:
-
     App\:
         resource: '../Application'
         exclude:
@@ -18,3 +16,9 @@ services:
         resource: '../Application/UserInterface/API/Action'
         tags:
             - 'controller.service_arguments'
+
+    App\UserInterface\Admin\Action\:
+        resource: '../Application/UserInterface/Admin/Action'
+        tags:
+            - 'controller.service_arguments'
+

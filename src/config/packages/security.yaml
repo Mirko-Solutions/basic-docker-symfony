@@ -19,6 +19,17 @@ security:
             custom_authenticators:
                 - App\Infrastructure\Security\ApiKeyAuthenticator
         main:
+    enable_authenticator_manager: true
+    access_control:
+        - { path: ^/api/user/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/user/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/user/recovery, roles: PUBLIC_ACCESS }
+        - { path: ^/api/user/reset-password, roles: PUBLIC_ACCESS }
+
+        - { path: ^/api/user/edit-profile/\d+$, roles: ROLE_USER }
+        - { path: ^/api/user/logout, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: ^/api/admin/*, roles: ROLE_ADMIN }
 when@test:
     security:
         password_hashers:

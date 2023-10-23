@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 
 class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    const API_LOGIN_PATH = '/api/user/login';
     private UserRepository $userRepository;
 
     public function __construct(UserRepository $userRepository)
@@ -26,12 +25,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        $pathInfo = $request->getPathInfo();
-        if (str_starts_with($pathInfo, self::API_LOGIN_PATH)) {
-            return false;
-        }
-
-        return str_starts_with($pathInfo, '/api/');
+        return $request->headers->has('X-AUTH-TOKEN');
     }
 
     public function authenticate(Request $request): Passport

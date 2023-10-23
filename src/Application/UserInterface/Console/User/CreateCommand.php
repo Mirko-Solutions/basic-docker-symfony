@@ -2,6 +2,7 @@
 
 namespace App\UserInterface\Console\User;
 
+use App\Domain\DTO\User\UserDTO;
 use App\Domain\ValueObject\Email;
 use App\Infrastructure\Service\User\CreateService;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +24,7 @@ class CreateCommand extends Command
         $this->createService = $createService;
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this->setDescription('Create new user in database');
 
@@ -31,14 +32,20 @@ class CreateCommand extends Command
         $this->addArgument("password", InputArgument::REQUIRED);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $email = new Email($input->getArgument('email'));
         $plainPassword = $input->getArgument('password');
-
-        $user = $this->createService->create($email, $plainPassword);
+        $userDTO = new UserDTO();
+        $userDTO->email = $email;
+        $userDTO->password = $plainPassword;
+        $userDTO->firstName = 'test_first_name';
+        $userDTO->lastName = 'test_last_name';
+        $user = $this->createService->create(
+            $userDTO
+        );
 
         $io->success("User success register: email {$user->email()->toString()} id: {$user->getId()}");
 

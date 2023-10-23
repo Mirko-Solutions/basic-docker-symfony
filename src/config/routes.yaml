@@ -6,3 +6,68 @@ api.user.login:
     path: /api/user/login
     controller: App\UserInterface\API\Action\User\LoginAction
     methods: ['POST']
+
+api.user.register:
+    path: /api/user/register
+    controller: App\UserInterface\API\Action\User\RegisterAction
+    methods: ['POST']
+
+api.user.recovery:
+    path: /api/user/recovery
+    controller: App\UserInterface\API\Action\User\RecoveryAction
+    methods: ['POST']
+
+api.user.reset-password:
+    path: /api/user/reset-password/{token}
+    controller: App\UserInterface\API\Action\User\ResetPasswordAction
+    methods: ['POST']
+
+api.user.edit-profile:
+    path: /api/user/edit-profile/{user}
+    controller: App\UserInterface\API\Action\User\EditProfileAction
+    methods: ['PUT']
+
+api.user.view-profile:
+    path: /api/user/view-profile/{user}
+    controller: App\UserInterface\API\Action\User\ViewProfileAction
+    methods: ['GET']
+
+api.user.user-data:
+    path: /api/user/user-data
+    controller: App\UserInterface\API\Action\User\UserDataAction
+    methods: ['GET']
+
+api.user.delete-profile:
+    path: /api/user/delete-profile/{user}
+    controller: App\UserInterface\API\Action\User\DeleteProfileAction
+    methods: ['DELETE']
+
+api.user.logout:
+    path: /api/user/logout
+    controller: App\UserInterface\API\Action\User\LogoutAction
+    methods: ['POST']
+
+api.admin.users:
+    path: /api/admin/users
+    controller: App\UserInterface\Admin\Action\User\UserListAction
+    methods: ['GET']
+
+api.admin.users-view:
+    path: /api/admin/users/{user}
+    controller: App\UserInterface\Admin\Action\User\UserViewAction
+    methods: ['GET']
+
+api.admin.users-delete:
+    path: /api/admin/users/{user}
+    controller: App\UserInterface\Admin\Action\User\UserDeleteAction
+    methods: ['DELETE']
+
+api.admin.users-create:
+    path: /api/admin/users
+    controller: App\UserInterface\Admin\Action\User\UserCreateAction
+    methods: ['POST']
+
+api.admin.users-edit:
+    path: /api/admin/users/{user}
+    controller: App\UserInterface\Admin\Action\User\UserEditAction
+    methods: ['PUT']

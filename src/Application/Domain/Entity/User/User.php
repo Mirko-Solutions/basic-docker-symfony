@@ -2,6 +2,7 @@
 
 namespace App\Domain\Entity\User;
 
+use App\Domain\DTO\User\UserDTO;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use JetBrains\PhpStorm\Pure;
@@ -28,6 +29,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(name: 'id')]
     private int $id;
 
+    #[Column(type: 'string', nullable: false)]
+    private string $firstName;
+
+    #[Column(type: 'string', nullable: false)]
+    private string $lastName;
+
     #[Column(type: 'string', unique: true, nullable: false)]
     private string $email;
 
@@ -37,13 +44,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: 'simple_array', nullable: false)]
     private array $roles = [];
 
-    #[Pure] public static function create(Email $email): User
+    #[Column(type: 'string', nullable: true)]
+    private string|null $recoveryToken;
+
+    #[Column(type: 'datetime', nullable: false)]
+    private \DateTime $createdAt;
+
+    #[Column(type: 'datetime', nullable: false)]
+    private \DateTime $updatedAt;
+
+    #[Column(type: 'datetime', nullable: true)]
+    private \DateTime|null $deletedAt = null;
+
+    #[Column(type: 'boolean', nullable: false)]
+    private bool $isAccepted;
+
+    #[Pure] public static function create(string $firstName, string $lastName, Email $email, string $password): User
     {
         $user = new self();
-
-        $user->email = $email;
-        $user->roles[] = Role::USER->name;
-
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setEmail($email);
+        $user->setPassword($password);
+        $user->setRoles([Role::ROLE_USER->name]);
+        $user->setCreatedAt();
+        $user->setUpdatedAt();
         return $user;
     }
 
@@ -72,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email()->toString();
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
@@ -91,5 +116,84 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->id = $id;
         return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): void
+    {
+        $this->createdAt = new \DateTime('now');
+    }
+
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): void
+    {
+        $this->updatedAt = new \DateTime('now');
+    }
+
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(): void
+    {
+        $this->deletedAt = new \DateTime('now');
+    }
+    public function setRecoveryToken(?string $recoveryToken): self
+    {
+        $this->recoveryToken = $recoveryToken;
+
+        return $this;
+    }
+
+    public function getEmail(): Email
+    {
+        return new Email($this->email);
+    }
+    public function setEmail(Email $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->isAccepted;
+    }
+
+    public function setIsAccepted(bool $isAccepted): void
+    {
+        $this->isAccepted = $isAccepted;
+    }
+
+    private function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
     }
 }
